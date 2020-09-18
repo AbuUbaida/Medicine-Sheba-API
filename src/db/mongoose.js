@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-require('dotenv').config({ path: '../config/dev.env' })
 
-mongoose.connect(process.env.MONGODB_URL, {
+mongoose.connect("mongodb+srv://ubaida:personal_cluster@medicine-sheba.0wsoq.mongodb.net/medicine-sheba?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,

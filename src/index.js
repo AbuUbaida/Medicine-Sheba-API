@@ -2,11 +2,10 @@ const express = require('express')
 const userRouter = require('./routers/user')
 const medicineRouter = require('./routers/medicine')
 const adminMedicineRouter = require('./routers/admin/medicine')
-require('dotenv').config({ path: './config/dev.env' })
 require('./db/mongoose')
 
 const app = express()
-const port = process.env.PORT
+const port = 3000||process.env.PORT
 
 app.use(express.json())
 app.use((req, res, next) => {
