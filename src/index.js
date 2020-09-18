@@ -5,7 +5,7 @@ const adminMedicineRouter = require('./routers/admin/medicine')
 require('./db/mongoose')
 
 const app = express()
-const port = 3000||process.env.PORT
+const port = process.env.PORT
 
 app.use(express.json())
 app.use((req, res, next) => {
