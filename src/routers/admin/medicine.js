@@ -38,7 +38,7 @@ router.post('/admin/add-medicine', async (req, res) => {
 
 // router.post('/admin/update-medicine', async (req, res) => {
 //     try {
-//         const registeredMedicine = await Medicine.findByIdAndUpdate(req.body._id)
+//         const registeredMedicine = await Medicine.findByIdAndUpdate(req.body._id,{})
 //         res.status(201).json({ status: 'success', message: registeredMedicine })
 //     } catch (e) {
 //         res.status(400).json({ status: 'error', message: e.message })
