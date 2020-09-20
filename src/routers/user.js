@@ -58,7 +58,7 @@ router.patch('/users/:id', async (req, res) => {
             return res.status(404).json({ status: 'error', message: e.message })
         }
 
-        updates.forEach((update) => routine[update] = req.body[update])
+        updates.forEach((update) => user[update] = req.body[update])
         await user.save()
         res.send({ status: 'success', message: user })
     } catch (e) {
