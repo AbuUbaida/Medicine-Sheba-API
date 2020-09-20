@@ -2,6 +2,7 @@ const express = require('express')
 const userRouter = require('./routers/user')
 const medicineRouter = require('./routers/medicine')
 const orderRouter = require('./routers/order')
+const adminOrderRouter = require('./routers/admin/order')
 const adminMedicineRouter = require('./routers/admin/medicine')
 require('./db/mongoose')
 
@@ -19,6 +20,7 @@ app.use(userRouter)
 app.use(medicineRouter)
 app.use(orderRouter)
 app.use(adminMedicineRouter)
+app.use(adminOrderRouter)
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
