@@ -7,7 +7,7 @@ const router = new express.Router()
 router.get('/admin/orders/pending', async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Pending' }).populate('owner').exec()
-        
+
         if (orders.length == 0) {
             return res.status(404).json({ status: 'error', message: 'No pending order available' })
         }
@@ -109,6 +109,24 @@ router.get('/admin/orders/:orderNo', async (req, res) => {
         res.status(400).json({ status: 'error', message: e.message })
     }
 })
+
+
+router.post('/admin/orders/change-status', async (req, res) => {
+    try {
+        const order = await Order.findOne({ orderNo: req.body.orderNo, orderStatus: req.body.statusFrom })
+
+        if (!order) {
+            res.status(404).json({ status: 'error', message: 'Order not found' })
+        }
+
+        order.orderStatus=req.body.statusTo
+        order.save()
+        res.status(200).json({ status: 'success', message: 'Order status changed' })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
+
 
 // router.get('/orders/accepted', async (req, res) => {
 //     try {
