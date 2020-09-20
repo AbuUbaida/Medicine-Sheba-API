@@ -1,10 +1,10 @@
 const express = require('express')
 const User = require('../models/user')
-const auth=require('../middlewares/auth')
+const auth = require('../middlewares/auth')
 const router = new express.Router()
 
 router.get('/', async (req, res) => {
-        res.status(201).json({ status: 'success', message: 'Assalamualaikum' })
+    res.status(201).json({ status: 'success', message: 'Assalamualaikum' })
 })
 
 
@@ -36,6 +36,31 @@ router.post('/users/login', async (req, res) => {
         const token = await user.generateAuthToken()
         // toJSON is called into user implicitly which returns the selected properties
         res.json({ status: 'success', message: { user, token } })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
+
+
+router.patch('/users/me', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['userName', 'phone', 'password']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidOperation) {
+        return res.status(400).json({ status: 'error', message: 'Invalid updates' })
+    }
+
+    try {
+        const user = await User.findById(req.body._id)
+
+        if (!user) {
+            return res.status(404).json({ status: 'error', message: e.message })
+        }
+
+        updates.forEach((update) => routine[update] = req.body[update])
+        await user.save()
+        res.send({ status: 'success', message: user })
     } catch (e) {
         res.status(400).json({ status: 'error', message: e.message })
     }
