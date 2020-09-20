@@ -12,7 +12,7 @@ router.post('/order', async (req, res) => {
     try {
         order.orderNo = await Order.countDocuments() + 1
         await order.save()
-        res.status(201).json({ status: 'success', message: 'Items added to cart' })
+        res.status(201).json({ status: 'success', message: 'Order placed for acceptance' })
     } catch (e) {
         res.status(400).json({ status: 'error', message: e.message })
     }
