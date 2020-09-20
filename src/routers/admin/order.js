@@ -1,7 +1,6 @@
 const express = require('express')
 const moment = require('moment')
 const Order = require('../../models/order')
-const auth = require('../middlewares/auth')
 const router = new express.Router()
 
 
