@@ -1,6 +1,20 @@
 const mongoose = require('mongoose')
 
 
+const medicineDetails = new mongoose.Schema({
+    medicineId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Medicine'
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        trim: true
+    }
+})
+
+
 const orderSchema = new mongoose.Schema({
     orderNo: {
         type: Number,
@@ -11,13 +25,13 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: false,
         default: 'Pending',
-        enum: ['Accepted', 'Pending']
+        enum: ['Accepted', 'Pending', 'Delivered']
     },
-    medicineId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Medicine'
-    }],
+    orderDetails: [medicineDetails],
+    subTotal: {
+        type: Number,
+        required: true
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
