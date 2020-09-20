@@ -42,7 +42,7 @@ router.post('/users/login', async (req, res) => {
 })
 
 
-router.patch('/users/me', async (req, res) => {
+router.patch('/users/:id', async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['userName', 'phone', 'password']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -52,7 +52,7 @@ router.patch('/users/me', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.body._id)
+        const user = await User.findById(req.params.id)
 
         if (!user) {
             return res.status(404).json({ status: 'error', message: e.message })
