@@ -7,6 +7,10 @@ const router = new express.Router()
 router.get('/admin/orders/pending', async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Pending' }).populate('owner').exec()
+        
+        if (orders.length == 0) {
+            return res.status(404).json({ status: 'error', message: 'No pending order available' })
+        }
 
         const response = []
         orders.forEach(order => {
@@ -26,33 +30,14 @@ router.get('/admin/orders/pending', async (req, res) => {
     }
 })
 
-//need to change; find owner:......
-router.get('/admin/orders/:orderNo', async (req, res) => {
-    try {
-        const order = await Order.findOne({ orderNo: req.params.orderNo }).populate('owner medicineId').exec()
-
-        if (!order) {
-            res.status(400).json({ status: 'error', message: 'Order not found' })
-        }
-
-        const orderNo = order.orderNo
-        const customerName = order.owner.userName
-        //const address = order.owner.address
-        const medicineDetails = order.orderDetails
-        const dateTime = moment(order.createdAt).format('DD/MM/YYYY hh:mm a')
-        const subTotal = order.subTotal
-        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal }
-
-        res.status(200).json({ status: 'success', message: response })
-    } catch (e) {
-        res.status(400).json({ status: 'error', message: e.message })
-    }
-})
-
 
 router.get('/admin/orders/accepted', async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Accepted' }).populate('owner').exec()
+
+        if (orders.length == 0) {
+            return res.status(400).json({ status: 'error', message: 'No accepted order available' })
+        }
 
         const response = []
         orders.forEach(order => {
@@ -77,6 +62,10 @@ router.get('/admin/orders/delivered', async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Delivered' }).populate('owner').exec()
 
+        if (orders.length == 0) {
+            return res.status(400).json({ status: 'error', message: 'No delivered order available' })
+        }
+
         const response = []
         orders.forEach(order => {
             const orderId = order._id
@@ -95,6 +84,31 @@ router.get('/admin/orders/delivered', async (req, res) => {
     }
 })
 
+
+
+
+//need to change; find owner:......
+router.get('/admin/orders/:orderNo', async (req, res) => {
+    try {
+        const order = await Order.findOne({ orderNo: req.params.orderNo }).populate('owner medicineId').exec()
+
+        if (!order) {
+            res.status(404).json({ status: 'error', message: 'Order not found' })
+        }
+
+        const orderNo = order.orderNo
+        const customerName = order.owner.userName
+        //const address = order.owner.address
+        const medicineDetails = order.orderDetails
+        const dateTime = moment(order.createdAt).format('DD/MM/YYYY hh:mm a')
+        const subTotal = order.subTotal
+        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal }
+
+        res.status(200).json({ status: 'success', message: response })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
 
 // router.get('/orders/accepted', async (req, res) => {
 //     try {
