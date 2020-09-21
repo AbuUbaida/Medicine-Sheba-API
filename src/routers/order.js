@@ -24,7 +24,7 @@ router.get('/orders/accepted', auth, async (req, res) => {
         const orders = await Order.find({ orderStatus: 'Accepted', owner: req.user._id })
 
         if (orders.length == 0) {
-            return res.status(409).json({ status: 'error', message: 'You do not have any accepted order' })
+            return res.status(404).json({ status: 'error', message: 'You do not have any accepted order' })
         }
 
         res.status(200).json({ status: 'success', message: orders })
@@ -39,7 +39,7 @@ router.get('/orders/pending', auth, async (req, res) => {
         const orders = await Order.find({ orderStatus: 'Pending', owner: req.user._id })
 
         if (orders.length == 0) {
-            return res.status(409).json({ status: 'error', message: 'You do not have any pending order' })
+            return res.status(404).json({ status: 'error', message: 'You do not have any pending order' })
         }
 
         res.status(200).json({ status: 'success', message: orders })
@@ -54,7 +54,7 @@ router.get('/orders/delivered', auth, async (req, res) => {
         const orders = await Order.find({ orderStatus: 'Delivered', owner: req.user._id })
 
         if (orders.length == 0) {
-            return res.status(409).json({ status: 'error', message: 'You do not have any delivered order' })
+            return res.status(404).json({ status: 'error', message: 'You do not have any delivered order' })
         }
 
         res.status(200).json({ status: 'success', message: orders })
