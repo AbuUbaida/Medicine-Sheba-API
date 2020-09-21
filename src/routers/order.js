@@ -74,7 +74,7 @@ router.get('/orders/delivered', auth, async (req, res) => {
 //get the details of a selected order
 router.get('/orders/:orderNo', auth, async (req, res) => {
     try {
-        const order = await Order.findOne({ orderNo: req.params.orderNo, owner: req.user._id }).populate('medicineId').exec()
+        const order = await Order.findOne({ orderNo: req.params.orderNo, owner: req.user._id }).populate('medicineId owner').exec()
 
         if (!order) {
             res.status(404).json({ status: 'error', message: 'Order not found' })
