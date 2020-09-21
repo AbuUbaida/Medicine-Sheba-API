@@ -6,8 +6,8 @@ const router = new express.Router()
 
 router.post('/order', auth, async (req, res) => {
     const order = new Order({
-        ...req.body
-        //owner: req.user._id
+        ...req.body,
+        owner: req.user._id
     })
     try {
         order.orderNo = await Order.countDocuments() + 1
@@ -78,7 +78,7 @@ router.get('/orders/:orderNo', auth, async (req, res) => {
         const medicineDetails = order.orderDetails
         const dateTime = moment(order.createdAt).format('DD/MM/YYYY hh:mm a')
         const subTotal = order.subTotal
-        
+
         const response = { orderNo, customerName, medicineDetails, dateTime, subTotal }
 
         res.status(200).json({ status: 'success', message: response })
