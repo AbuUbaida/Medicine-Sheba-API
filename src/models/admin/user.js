@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 require('../../validators/user')
 
 
+//userSchema that stores all info for admin user
 const userSchema = new mongoose.Schema({
     email: {
         type: String,

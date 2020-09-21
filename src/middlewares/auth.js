@@ -1,10 +1,13 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+//middleware; that is called before accessing the database; Bearer authentication token is added
+//to complete the process
 const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, 'thisprojectisfromisdlab')
+        const decoded = jwt.verify(token, 'thisprojectisfromisdlab') //json web token encode the
+        // string to make auth token
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 
         if (!user) {
@@ -15,7 +18,7 @@ const auth = async (req, res, next) => {
         req.user = user
         next()
     } catch (e) {
-        res.status(401).json({ error: e})
+        res.status(401).json({ error: e })
     }
 }
 

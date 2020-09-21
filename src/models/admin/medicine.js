@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 
+//medicineSchema stores all the available medicines and their necessary info
 const medicineSchema = new mongoose.Schema({
     medicineName: {
         type: String,
@@ -38,6 +39,7 @@ const medicineSchema = new mongoose.Schema({
 })
 
 
+//static method that finds medicine by its generic name
 medicineSchema.statics.findByGeneric = async (genericName) => {
     const medicine = await Medicine.findOne({ genericName })
 
