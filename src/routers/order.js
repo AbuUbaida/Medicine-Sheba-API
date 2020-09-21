@@ -19,14 +19,73 @@ router.post('/order', auth, async (req, res) => {
 })
 
 
-// router.get('/orders/accepted', async (req, res) => {
-//     try {
-//         const orders = await Order.find({ orderStatus: 'Accepted', owner: req.user._id })
-//         res.status(200).json({ status: 'success', message: cartItems })
-//     } catch (e) {
-//         res.status(400).json({ status: 'error', message: e.message })
-//     }
-// })
+router.get('/orders/accepted', auth, async (req, res) => {
+    try {
+        const orders = await Order.find({ orderStatus: 'Accepted', owner: req.user._id })
+
+        if (orders.length == 0) {
+            return res.status(409).json({ status: 'error', message: 'You do not have any accepted order' })
+        }
+
+        res.status(200).json({ status: 'success', message: orders })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
+
+
+router.get('/orders/pending', auth, async (req, res) => {
+    try {
+        const orders = await Order.find({ orderStatus: 'Pending', owner: req.user._id })
+
+        if (orders.length == 0) {
+            return res.status(409).json({ status: 'error', message: 'You do not have any pending order' })
+        }
+
+        res.status(200).json({ status: 'success', message: orders })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
+
+
+router.get('/orders/delivered', auth, async (req, res) => {
+    try {
+        const orders = await Order.find({ orderStatus: 'Delivered', owner: req.user._id })
+
+        if (orders.length == 0) {
+            return res.status(409).json({ status: 'error', message: 'You do not have any delivered order' })
+        }
+
+        res.status(200).json({ status: 'success', message: orders })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
+
+
+router.get('/orders/:orderNo', auth, async (req, res) => {
+    try {
+        const order = await Order.findOne({ orderNo: req.params.orderNo, owner: req.user._id }).populate('medicineId').exec()
+
+        if (!order) {
+            res.status(404).json({ status: 'error', message: 'Order not found' })
+        }
+
+        const orderNo = order.orderNo
+        // const customerName = order.owner.userName
+        //const address = order.owner.address
+        const medicineDetails = order.orderDetails
+        const dateTime = moment(order.createdAt).format('DD/MM/YYYY hh:mm a')
+        const subTotal = order.subTotal
+        
+        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal }
+
+        res.status(200).json({ status: 'success', message: response })
+    } catch (e) {
+        res.status(400).json({ status: 'error', message: e.message })
+    }
+})
 
 
 // router.post('/remove-cart', async (req, res) => {
