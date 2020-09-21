@@ -6,7 +6,7 @@ const router = new express.Router()
 
 // user registration; user information will be given through body;
 // authentication token will be provided to the registered user to use the features
-router.post('/admin/create-user', async (req, res) => {
+router.post('/admin/create-user', auth, async (req, res) => {
     const user = new User({
         ...req.body
     })
