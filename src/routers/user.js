@@ -42,7 +42,7 @@ router.post('/users/login', async (req, res) => {
 })
 
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/update-profile', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['userName', 'phone', 'password']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -52,7 +52,7 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.params.id)
+        const user = await User.findById(req.user._id)
 
         if (!user) {
             return res.status(404).json({ status: 'error', message: e.message })
@@ -80,16 +80,16 @@ router.post('/users/logout', auth, async (req, res) => {
 })
 
 
-// // Logout user from all session
-// router.post('/users/logoutAll', auth, async (req, res) => {
-//     try {
-//         req.user.tokens = []
-//         await req.user.save()
-//         res.json({ status: 'success', message: 'Logged out from all devices' })
-//     } catch (e) {
-//         res.status(500).json({ status: 'error', message: e.message })
-//     }
-// })
+// Logout user from all session
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.json({ status: 'success', message: 'Logged out from all devices' })
+    } catch (e) {
+        res.status(500).json({ status: 'error', message: e.message })
+    }
+})
 
 
 module.exports = router
