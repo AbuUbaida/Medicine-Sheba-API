@@ -1,10 +1,11 @@
 const express = require('express')
 const moment = require('moment')
+const auth = require('../../middlewares/authAdmin')
 const Order = require('../../models/order')
 const router = new express.Router()
 
 
-router.get('/admin/orders/pending', async (req, res) => {
+router.get('/admin/orders/pending', auth, async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Pending' }).populate('owner').exec()
 
@@ -31,7 +32,7 @@ router.get('/admin/orders/pending', async (req, res) => {
 })
 
 
-router.get('/admin/orders/accepted', async (req, res) => {
+router.get('/admin/orders/accepted', auth, async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Accepted' }).populate('owner').exec()
 
@@ -58,7 +59,7 @@ router.get('/admin/orders/accepted', async (req, res) => {
 })
 
 
-router.get('/admin/orders/delivered', async (req, res) => {
+router.get('/admin/orders/delivered', auth, async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Delivered' }).populate('owner').exec()
 
@@ -88,7 +89,7 @@ router.get('/admin/orders/delivered', async (req, res) => {
 
 
 //need to change; find owner:......
-router.get('/admin/orders/:orderNo', async (req, res) => {
+router.get('/admin/orders/:orderNo', auth, async (req, res) => {
     try {
         const order = await Order.findOne({ orderNo: req.params.orderNo }).populate('owner medicineId').exec()
 
@@ -111,7 +112,7 @@ router.get('/admin/orders/:orderNo', async (req, res) => {
 })
 
 
-router.post('/admin/orders/change-status', async (req, res) => {
+router.post('/admin/orders/change-status', auth, async (req, res) => {
     try {
         const order = await Order.findOne({ orderNo: req.body.orderNo, orderStatus: req.body.statusFrom })
 
@@ -119,42 +120,12 @@ router.post('/admin/orders/change-status', async (req, res) => {
             res.status(404).json({ status: 'error', message: 'Order not found' })
         }
 
-        order.orderStatus=req.body.statusTo
+        order.orderStatus = req.body.statusTo
         order.save()
         res.status(200).json({ status: 'success', message: 'Order status changed' })
     } catch (e) {
         res.status(400).json({ status: 'error', message: e.message })
     }
 })
-
-
-// router.get('/orders/accepted', async (req, res) => {
-//     try {
-//         const orders = await Order.find({ orderStatus: 'Accepted', owner: req.user._id })
-//         res.status(200).json({ status: 'success', message: cartItems })
-//     } catch (e) {
-//         res.status(400).json({ status: 'error', message: e.message })
-//     }
-// })
-
-
-// router.post('/remove-cart', async (req, res) => {
-//     try {
-//         const cartItem = await Order.findByIdAndDelete(req.body._id)
-//         res.status(201).json({ status: 'success', message: cartItem })
-//     } catch (e) {
-//         res.status(400).json({ status: 'error', message: e.message })
-//     }
-// })
-
-
-// router.post('/admin/remove-medicine', async (req, res) => {
-//     try {
-//         const registeredMedicine = await Order.findByIdAndDelete(req.body._id)
-//         res.status(201).json({ status: 'success', message: registeredMedicine })
-//     } catch (e) {
-//         res.status(400).json({ status: 'error', message: e.message })
-//     }
-// })
 
 module.exports = router

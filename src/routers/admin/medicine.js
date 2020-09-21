@@ -1,9 +1,10 @@
 const express = require('express')
+const auth = require('../../middlewares/authAdmin')
 const Medicine = require('../../models/admin/medicine')
 const router = new express.Router()
 
 
-router.get('/admin/medicines', async (req, res) => {
+router.get('/admin/medicines', auth, async (req, res) => {
     try {
         const medicines = await Medicine.find()
         res.status(200).json({ status: 'success', message: medicines })
@@ -13,7 +14,7 @@ router.get('/admin/medicines', async (req, res) => {
 })
 
 
-router.post('/admin/add-medicine', async (req, res) => {
+router.post('/admin/add-medicine', auth, async (req, res) => {
     const medicine = new Medicine({
         ...req.body
     })
@@ -36,7 +37,7 @@ router.post('/admin/add-medicine', async (req, res) => {
 })
 
 
-router.post('/admin/update-medicine', async (req, res) => {
+router.post('/admin/update-medicine', auth, async (req, res) => {
     try {
         const registeredMedicine = await Medicine.findByIdAndUpdate(req.body._id,
             {
@@ -54,7 +55,7 @@ router.post('/admin/update-medicine', async (req, res) => {
 })
 
 
-router.post('/admin/remove-medicine', async (req, res) => {
+router.post('/admin/remove-medicine', auth, async (req, res) => {
     try {
         const registeredMedicine = await Medicine.findByIdAndDelete(req.body._id)
         res.status(200).json({ status: 'success', message: registeredMedicine })

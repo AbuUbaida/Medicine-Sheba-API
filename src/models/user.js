@@ -4,13 +4,13 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 require('../validators/user')
 
-
+// Collection to store the general user data
 const userSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: true,
         trim: true,
-        validate: userValidator.nameValidator
+        validate: userValidator.nameValidator //validates the userName field
     },
     phone: {
         type: String,
