@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate: userValidator.emailValidator
     },
+    address: {
+        type: String,
+        required: true,
+        trim: true
+    },
     password: {
         type: String,
         required: true,

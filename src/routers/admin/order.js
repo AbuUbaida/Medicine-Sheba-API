@@ -104,11 +104,11 @@ router.get('/admin/orders/:orderNo', auth, async (req, res) => {
 
         const orderNo = order.orderNo
         const customerName = order.owner.userName
-        //const address = order.owner.address
+        const address = order.owner.address
         const medicineDetails = order.orderDetails
         const dateTime = moment(order.createdAt).format('DD/MM/YYYY hh:mm a')
         const subTotal = order.subTotal
-        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal } //manipulates 
+        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal, address } //manipulates 
         //the response data
 
         res.status(200).json({ status: 'success', message: response })

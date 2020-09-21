@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-
+//nested schema under orderSchema
 const medicineDetails = new mongoose.Schema({
     medicineId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +14,7 @@ const medicineDetails = new mongoose.Schema({
     }
 })
 
-
+//orderSchema that contains the necessary info
 const orderSchema = new mongoose.Schema({
     orderNo: {
         type: Number,
@@ -27,11 +27,12 @@ const orderSchema = new mongoose.Schema({
         default: 'Pending',
         enum: ['Accepted', 'Pending', 'Delivered']
     },
-    orderDetails: [medicineDetails],
+    orderDetails: [medicineDetails], //contains multiple orders
     subTotal: {
         type: Number,
         required: true
     },
+    //refer to the User collection to access the fields of that collection
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

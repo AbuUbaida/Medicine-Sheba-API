@@ -4,16 +4,17 @@ const auth = require('../../middlewares/authAdmin')
 const router = new express.Router()
 
 
-// user registration; user information will be given through body;
-// authentication token will be provided to the registered user to use the features
+// authenticated user can create a admin user; all the information will be given through body;
 router.post('/admin/create-user', auth, async (req, res) => {
     const user = new User({
         ...req.body
     })
 
     try {
-        const registeredUser = await User.find({ email: req.body.email })
+        const registeredUser = await User.find({ email: req.body.email }) //finds all the admin
+        // users by the specified email
 
+        //checks if any user is inserted in the lit before
         if (registeredUser.length != 0) {
             return res.status(409).json({ status: 'error', message: 'Admin already registered' })
         }
@@ -26,6 +27,7 @@ router.post('/admin/create-user', auth, async (req, res) => {
 })
 
 
+//login router enables admin user to login to their account; authentication token will be generated
 router.post('/admin/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -38,7 +40,7 @@ router.post('/admin/login', async (req, res) => {
 })
 
 
-
+//router for admin account logout from current device
 router.post('/admin/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {

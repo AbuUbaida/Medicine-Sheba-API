@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
 
 
 // user registration; user information will be given through body;
-// authentication token will be provided to the registered user to use the features
 router.post('/signup', async (req, res) => {
     const user = new User({
         ...req.body
@@ -30,6 +29,8 @@ router.post('/signup', async (req, res) => {
 })
 
 
+// login the general users; authentication token will be provided to the registered user to use
+// the features
 router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -42,9 +43,10 @@ router.post('/users/login', async (req, res) => {
 })
 
 
+//update user's profile
 router.patch('/users/update-profile', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['userName', 'phone', 'password']
+    const allowedUpdates = ['userName', 'phone', 'password', 'address']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
@@ -58,7 +60,7 @@ router.patch('/users/update-profile', auth, async (req, res) => {
             return res.status(404).json({ status: 'error', message: e.message })
         }
 
-        updates.forEach((update) => user[update] = req.body[update])
+        updates.forEach((update) => user[update] = req.body[update]) //we are accepting some specified fields to update
         await user.save()
         res.send({ status: 'success', message: user })
     } catch (e) {
@@ -67,6 +69,7 @@ router.patch('/users/update-profile', auth, async (req, res) => {
 })
 
 
+//log out user from current session
 router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {

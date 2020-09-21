@@ -4,13 +4,15 @@ const auth = require('../middlewares/auth')
 const router = new express.Router()
 
 
+//place an order by user panel;
 router.post('/order', auth, async (req, res) => {
     const order = new Order({
         ...req.body,
-        owner: req.user._id
+        owner: req.user._id //owner id is taken from the token
     })
     try {
-        order.orderNo = await Order.countDocuments() + 1
+        order.orderNo = await Order.countDocuments() + 1 //count the previous total numbers of
+        // orders and assign a new value
         await order.save()
         res.status(201).json({ status: 'success', message: 'Order placed for acceptance' })
     } catch (e) {
@@ -19,10 +21,13 @@ router.post('/order', auth, async (req, res) => {
 })
 
 
+//read the orders that are accepted by admin
 router.get('/orders/accepted', auth, async (req, res) => {
     try {
-        const orders = await Order.find({ orderStatus: 'Accepted', owner: req.user._id })
+        const orders = await Order.find({ orderStatus: 'Accepted', owner: req.user._id }) //find
+        // the orders that belongs to the logged in user
 
+        //if the orders length is zero, means there is no accepted orders to show 
         if (orders.length == 0) {
             return res.status(404).json({ status: 'error', message: 'You do not have any accepted order' })
         }
@@ -34,6 +39,7 @@ router.get('/orders/accepted', auth, async (req, res) => {
 })
 
 
+//read the orders that are pending by admin
 router.get('/orders/pending', auth, async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Pending', owner: req.user._id })
@@ -49,6 +55,7 @@ router.get('/orders/pending', auth, async (req, res) => {
 })
 
 
+//read the orders that are delivered by admin
 router.get('/orders/delivered', auth, async (req, res) => {
     try {
         const orders = await Order.find({ orderStatus: 'Delivered', owner: req.user._id })
@@ -64,6 +71,7 @@ router.get('/orders/delivered', auth, async (req, res) => {
 })
 
 
+//get the details of a selected order
 router.get('/orders/:orderNo', auth, async (req, res) => {
     try {
         const order = await Order.findOne({ orderNo: req.params.orderNo, owner: req.user._id }).populate('medicineId').exec()
@@ -74,12 +82,13 @@ router.get('/orders/:orderNo', auth, async (req, res) => {
 
         const orderNo = order.orderNo
         // const customerName = order.owner.userName
-        //const address = order.owner.address
+        const address = order.owner.address
         const medicineDetails = order.orderDetails
         const dateTime = moment(order.createdAt).format('DD/MM/YYYY hh:mm a')
         const subTotal = order.subTotal
 
-        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal }
+        const response = { orderNo, customerName, medicineDetails, dateTime, subTotal, address }
+        //manipulating the response
 
         res.status(200).json({ status: 'success', message: response })
     } catch (e) {
